@@ -2,9 +2,9 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#171815">
-  <title>盘迹 - 万物有履历</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#10110f">
+  <title>盘迹 · 器物尚未显现</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -12,167 +12,177 @@
     <header class="topbar">
       <div>
         <span class="eyebrow">PANJI / 盘迹</span>
-        <h1 id="page-title">今日随身</h1>
+        <h1 id="page-title">今日持器</h1>
       </div>
-      <button class="avatar" aria-label="个人资料">SH</button>
+      <button class="avatar" aria-label="持器者档案">持</button>
     </header>
 
     <main>
       <section class="page active" data-page="home">
-        <article class="hero-card">
+        <article class="hero-card metal-glow">
           <div class="hero-meta">
             <span class="status-dot"></span>
-            <span>正在随身 · 第 86 天</span>
-            <span class="serial">NO. 027</span>
+            <span>随行中 · 第 12 次</span>
+            <span class="serial">初器 NO.027</span>
           </div>
-          <div class="artifact-wrap">
-            <div class="orbit orbit-one"></div>
-            <div class="orbit orbit-two"></div>
+          <div class="artifact-stage">
+            <div class="sigil sigil-a"></div>
+            <div class="sigil sigil-b"></div>
             <div class="artifact">
-              <span class="artifact-core"></span>
+              <span class="artifact-core">金</span>
               <i></i><i></i><i></i><i></i><i></i><i></i>
             </div>
+            <span class="element-tag">金脉已显现</span>
           </div>
           <div class="artifact-copy">
-            <span class="maker">玄铁研究所 · 2025</span>
-            <h2>回响 · 钛合金机械环</h2>
-            <p>痕迹不是损耗，是时间留下的签名。</p>
+            <span class="maker">器名 / ECHO 001</span>
+            <h2>回响 · 无相环</h2>
+            <p>“它并非在发出声音，而是在记住声音。”</p>
           </div>
-          <div class="level-row">
-            <strong>LV. 12</strong>
-            <div class="level-track"><span id="xp-bar"></span></div>
-            <span id="xp-label">680 / 900</span>
+          <div class="reveal-row">
+            <div><span>真相显现</span><strong id="truth-label">42%</strong></div>
+            <div class="reveal-track"><span id="truth-bar"></span></div>
           </div>
         </article>
 
-        <div class="metric-grid">
-          <div class="metric"><strong id="city-count">8</strong><span>到访城市</span></div>
-          <div class="metric"><strong id="mission-count">23</strong><span>完成使命</span></div>
-          <div class="metric"><strong>146</strong><span>随身日数</span></div>
+        <div class="element-strip" aria-label="五行器脉">
+          <button class="element active" data-element="金"><b>金</b><small>结构</small></button>
+          <button class="element" data-element="木"><b>木</b><small>生长</small></button>
+          <button class="element" data-element="水"><b>水</b><small>流变</small></button>
+          <button class="element" data-element="火"><b>火</b><small>锻造</small></button>
+          <button class="element" data-element="土"><b>土</b><small>沉淀</small></button>
         </div>
 
         <div class="section-head">
-          <div><span class="eyebrow">NEARBY MISSION</span><h3>附近使命</h3></div>
-          <button class="text-button" data-goto="map">查看地图</button>
+          <div><span class="eyebrow">TODAY'S WHISPER</span><h3>今日异闻</h3></div>
+          <span class="time-chip">约 2 分钟</span>
         </div>
-
         <article class="mission-card">
-          <div class="mission-icon">城</div>
+          <div class="mission-seal">金</div>
           <div class="mission-body">
-            <span class="distance">距离 420m · 地点验证</span>
-            <h4>旧城的金属回声</h4>
-            <p>携带任意金属文玩，前往老街牌坊完成一次合影。</p>
-            <div class="reward-row">
-              <span>+120 盘值</span><span>城市徽章</span>
-            </div>
+            <span class="meta">线上任务 · 随时可完成</span>
+            <h4>听见沉默的金属</h4>
+            <p>从三段声音中，辨认哪一种来自“回响”的同源材料。</p>
+            <div class="rewards"><span>档案残页</span><span>铸痕 × 1</span></div>
           </div>
-          <button class="round-button start-mission" aria-label="开始任务">→</button>
+          <button class="round-button start-mission" aria-label="进入任务">→</button>
         </article>
 
         <div class="section-head">
-          <div><span class="eyebrow">STORY</span><h3>最近一页</h3></div>
+          <div><span class="eyebrow">ARCHIVE FRAGMENTS</span><h3>已寻回的残页</h3></div>
+          <button class="text-button" data-goto="lore">查看器谱</button>
         </div>
-        <article class="story-card">
-          <div class="story-date"><strong>06</strong><span>六月</span></div>
+        <div class="fragment-stack">
+          <article class="fragment">
+            <span class="fragment-no">残页 03</span>
+            <h4>铸七的手记</h4>
+            <p>“第三次试铸仍然失败。它记住了锤声，却忘记了火。”</p>
+            <small>寻回于第 9 次随行</small>
+          </article>
+          <article class="fragment locked-fragment" id="new-fragment">
+            <span class="fragment-no">残页 04</span>
+            <h4>档案尚未显现</h4>
+            <p>完成今日异闻，寻回下一段器物真相。</p>
+            <small>线索：声音 · 雨夜 · 重庆</small>
+          </article>
+        </div>
+      </section>
+
+      <section class="page" data-page="lore">
+        <div class="section-intro">
+          <span class="eyebrow">THE FIVE VEINS</span>
+          <h2>五行器谱</h2>
+          <p>五种器脉并无高下，它们只是以不同方式记住世界。</p>
+        </div>
+        <div class="vein-wheel">
+          <div class="wheel-center"><span>已识别</span><strong>1 / 5</strong></div>
+          <button class="vein-node gold active" style="--angle:0deg">金</button>
+          <button class="vein-node wood" style="--angle:72deg">木</button>
+          <button class="vein-node water" style="--angle:144deg">水</button>
+          <button class="vein-node fire" style="--angle:216deg">火</button>
+          <button class="vein-node earth" style="--angle:288deg">土</button>
+        </div>
+        <article class="lore-card" id="lore-card">
+          <div class="lore-heading"><span class="big-seal">金</span><div><span class="eyebrow">METAL VEIN</span><h3>金脉 · 记忆结构</h3></div></div>
+          <p>金脉之器对结构、碰撞与回声最为敏感。传闻每一次携带，都会在器物内部留下一道看不见的铸痕。</p>
+          <div class="lore-stats"><span>炼器师：铸七</span><span>来处：渝州旧厂区</span></div>
+        </article>
+        <div class="section-head"><div><span class="eyebrow">ARTIFICERS</span><h3>炼器师档案</h3></div></div>
+        <article class="artificer-card">
+          <div class="portrait"><span>七</span></div>
           <div>
-            <span class="distance">成都 · 定位与影像验证</span>
-            <h4>雨后的宽窄巷子</h4>
-            <p>铜色在潮湿空气里更沉了一点。今天，它第一次听见川剧锣鼓。</p>
+            <span class="meta">身份可信度 37%</span>
+            <h4>铸七</h4>
+            <p>没有人见过他点燃炉火。邻近旧厂的人只记得，每逢雨夜都会传出七次锤声。</p>
           </div>
+          <span class="redacted">档案缺失</span>
         </article>
       </section>
 
-      <section class="page" data-page="arsenal">
+      <section class="page" data-page="missions">
         <div class="section-intro">
-          <span class="eyebrow">MY COLLECTION</span>
-          <h2>我的随身库</h2>
-          <p>每件随身之物，都在等待自己的下一段故事。</p>
+          <span class="eyebrow">ONLINE JOURNEY</span>
+          <h2>随行异闻</h2>
+          <p>无需远行。携带器物，在线上逐步寻回它失落的来历。</p>
         </div>
-        <div class="collection-grid">
-          <article class="collection-card featured">
-            <div class="mini-artifact ring"></div>
-            <span class="rarity verified">已认证</span>
-            <h3>回响</h3>
-            <p>钛合金机械环</p>
-            <div class="card-stats"><span>LV.12</span><span>8 城</span></div>
-          </article>
-          <article class="collection-card">
-            <div class="mini-artifact cube"></div>
-            <span class="rarity">私藏</span>
-            <h3>界碑</h3>
-            <p>黄铜磁吸方块</p>
-            <div class="card-stats"><span>LV.7</span><span>3 城</span></div>
-          </article>
-          <article class="collection-card">
-            <div class="mini-artifact coin"></div>
-            <span class="rarity verified">已认证</span>
-            <h3>潮汐</h3>
-            <p>锆合金随身币</p>
-            <div class="card-stats"><span>LV.18</span><span>14 城</span></div>
-          </article>
-          <button class="add-card" id="add-item"><strong>＋</strong><span>录入新物件</span></button>
+        <div class="mission-tabs">
+          <button class="active">今日</button><button>故事</button><button>共鸣</button>
         </div>
-      </section>
-
-      <section class="page" data-page="map">
-        <div class="section-intro map-title">
-          <span class="eyebrow">EXPLORE</span>
-          <h2>城市使命</h2>
-          <p>你与随身之物，共同走过的现实地图。</p>
-        </div>
-        <div class="map-canvas">
-          <div class="road road-a"></div><div class="road road-b"></div><div class="road road-c"></div>
-          <button class="map-pin completed" style="left:18%;top:22%"><span>✓</span><small>人民公园</small></button>
-          <button class="map-pin current" style="left:58%;top:40%"><span>城</span><small>老街牌坊</small></button>
-          <button class="map-pin locked" style="left:74%;top:18%"><span>?</span><small>隐藏使命</small></button>
-          <button class="map-pin" style="left:35%;top:68%"><span>茶</span><small>百年茶馆</small></button>
-          <div class="user-location">你</div>
-        </div>
-        <article class="map-sheet">
-          <span class="distance">当前区域 · 成都锦江区</span>
-          <h3>旧城的金属回声</h3>
-          <p>地点验证任务 · 距离你 420m</p>
-          <div class="sheet-actions">
-            <div><strong>+120</strong><span>盘值</span></div>
-            <div><strong>限时</strong><span>城市徽章</span></div>
-            <button class="primary-button start-mission">开始使命</button>
-          </div>
+        <article class="quest-feature">
+          <div class="quest-visual"><span>声</span><i></i><i></i><i></i></div>
+          <span class="meta">主线异闻 · 第一炉 / 第四节</span>
+          <h3>听见沉默的金属</h3>
+          <p>铸七留下了三段声音。只有一段来自打造“回响”的原始材料。</p>
+          <div class="quest-prize"><span>可能寻回</span><strong>炼器师手稿 · 残页 04</strong></div>
+          <button class="primary-button start-mission">开始异闻</button>
         </article>
+        <div class="small-quests">
+          <article><span class="quest-type">日常</span><h4>今日为何带它？</h4><p>留下一句话，写入今日随行录。</p><b>故事墨迹 × 1</b></article>
+          <article><span class="quest-type">五行</span><h4>金中藏火</h4><p>完成一次 60 秒光影调配。</p><b>余烬碎片 × 1</b></article>
+          <article><span class="quest-type">共鸣</span><h4>百器同听</h4><p>全体持器者共同辨认雨夜锤声。</p><b>完成度 68%</b></article>
+        </div>
       </section>
 
-      <section class="page" data-page="market">
+      <section class="page" data-page="letters">
         <div class="section-intro">
-          <span class="eyebrow">LEGACY MARKET</span>
-          <h2>履历市场</h2>
-          <p>交易的不只是物件，还有它已经走过的路。</p>
+          <span class="eyebrow">SEALED LETTERS</span>
+          <h2>密函</h2>
+          <p>有些器物不会公开售卖。炼器师只向完成条件的持器者发出邀请。</p>
         </div>
-        <article class="market-card">
-          <div class="market-visual"><div class="mini-artifact coin large"></div><span>官方鉴真</span></div>
-          <div class="market-copy">
-            <span class="maker">潮汐 · NO. 114</span>
-            <h3>一枚走过 14 座城市的锆币</h3>
-            <div class="passport">
-              <span><strong>LV.18</strong>盘历等级</span>
-              <span><strong>42</strong>使命</span>
-              <span><strong>2</strong>历任主人</span>
-            </div>
-            <p>代表履历：在青海湖完成“风的边界”限定使命。</p>
-            <div class="price-row"><strong>¥ 1,680</strong><button class="outline-button">查看履历</button></div>
+        <article class="invitation-card">
+          <div class="wax-seal">火</div>
+          <span class="invite-status">未完整 · 3 / 4 条件</span>
+          <span class="eyebrow">FORGE INVITATION NO.02</span>
+          <h2>赤山正在寻找<br>下一批持器者</h2>
+          <p>西南方向出现了新的火脉反应。器形尚未公开，开炉日为七月初七。</p>
+          <div class="invite-rules">
+            <span class="done">完成 12 次随行</span>
+            <span class="done">寻回 3 张炼器师残页</span>
+            <span class="done">持有金脉初器</span>
+            <span id="invite-condition">寻回「雨夜来信」</span>
+          </div>
+          <div class="invite-footer">
+            <div><small>邀请权益</small><strong>限量新器抽签资格</strong></div>
+            <button class="seal-button" id="inspect-invite">查看线索</button>
           </div>
         </article>
-        <div class="value-note">
-          <span>盘迹价值模型</span>
-          <h3>物值 × 盘值 × 历值</h3>
-          <p>平台记录可验证履历与成交历史，但不承诺升值。故事增加的是独特性，价格仍由市场决定。</p>
-        </div>
+        <div class="section-head"><div><span class="eyebrow">RUMORS</span><h3>炉火传闻</h3></div></div>
+        <article class="rumor-card">
+          <div class="rumor-image"><span>?</span></div>
+          <div><span class="meta">火脉 · 器形未知</span><h4>代号「烬」</h4><p>有人在大足山中看见红光，但当地已经三十年没有炉坊。</p></div>
+        </article>
+        <article class="rumor-card dim">
+          <div class="rumor-image"><span>水</span></div>
+          <div><span class="meta">水脉 · 尚未响应</span><h4>东海来信</h4><p>需要先识别另一种器脉，才能读取此封密函。</p></div>
+        </article>
       </section>
     </main>
 
     <nav class="bottom-nav" aria-label="主导航">
-      <button class="nav-item active" data-target="home"><span>◉</span><small>随身</small></button>
-      <button class="nav-item" data-target="arsenal"><span>◇</span><small>藏库</small></button>
-      <button class="nav-item" data-target="map"><span>⌖</span><small>使命</small></button>
-      <button class="nav-item" data-target="market"><span>循</span><small>流转</small></button>
+      <button class="nav-item active" data-target="home"><span>器</span><small>持器</small></button>
+      <button class="nav-item" data-target="lore"><span>谱</span><small>器谱</small></button>
+      <button class="nav-item" data-target="missions"><span>异</span><small>异闻</small></button>
+      <button class="nav-item" data-target="letters"><span>函</span><small>密函</small></button>
     </nav>
   </div>
 
@@ -180,13 +190,33 @@
   <div class="modal-backdrop" id="mission-modal" aria-hidden="true">
     <div class="modal">
       <button class="modal-close" aria-label="关闭">×</button>
-      <span class="eyebrow">MISSION ACCEPTED</span>
-      <div class="modal-seal">城</div>
-      <h2>旧城的金属回声</h2>
-      <p>已开始记录本次行程。抵达老街牌坊后，使用地点定位并拍摄文玩合影即可完成。</p>
-      <button class="primary-button complete-mission">模拟完成使命</button>
+      <span class="eyebrow">METAL RESONANCE TEST</span>
+      <div class="modal-seal">声</div>
+      <h2>哪一段声音来自“回响”？</h2>
+      <p>铸七的手记提到：原料声音短促，尾音中藏着一次极轻的回震。</p>
+      <div class="sound-options">
+        <button data-answer="wrong"><span>Ⅰ</span><i></i><small>低沉 · 绵长</small></button>
+        <button data-answer="correct"><span>Ⅱ</span><i></i><small>短促 · 回震</small></button>
+        <button data-answer="wrong"><span>Ⅲ</span><i></i><small>清脆 · 无尾音</small></button>
+      </div>
+      <button class="primary-button submit-answer" disabled>确认选择</button>
     </div>
   </div>
+
+  <div class="modal-backdrop reveal-modal" id="reveal-modal" aria-hidden="true">
+    <div class="modal archive-reveal">
+      <span class="eyebrow">ARCHIVE RECOVERED</span>
+      <div class="paper-fragment">
+        <span>残页 04 / 雨夜来信</span>
+        <h3>“火不在炉中”</h3>
+        <p>铸七：若你听懂了回响，就去找赤山。他欠这件器物最后一场火。</p>
+        <small>落款地点：渝州 · 第七码头</small>
+      </div>
+      <p>器物真相显现度提升至 51%，开炉邀请条件已完成。</p>
+      <button class="primary-button finish-reveal">收入器谱</button>
+    </div>
+  </div>
+
   <script src="app.js"></script>
 </body>
 </html>
