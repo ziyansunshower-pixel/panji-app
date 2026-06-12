@@ -1,107 +1,92 @@
 const pages = document.querySelectorAll(".page");
 const navItems = document.querySelectorAll(".nav-item");
-const pageTitle = document.querySelector("#page-title");
-const missionModal = document.querySelector("#mission-modal");
-const revealModal = document.querySelector("#reveal-modal");
+const title = document.querySelector("#page-title");
+const riteModal = document.querySelector("#rite-modal");
+const crystalModal = document.querySelector("#crystal-modal");
 const toast = document.querySelector("#toast");
-const titles = { home: "今日持器", lore: "五行器谱", missions: "随行异闻", letters: "密函" };
-let selectedAnswer = "";
+const titles = { candidate: "候选者档案", trials: "持器试炼", energy: "今日蓄能", invitation: "开炉邀请" };
+let choice = null;
+let intent = null;
 
 function goTo(page) {
   pages.forEach((item) => item.classList.toggle("active", item.dataset.page === page));
   navItems.forEach((item) => item.classList.toggle("active", item.dataset.target === page));
-  pageTitle.textContent = titles[page];
+  title.textContent = titles[page];
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function showToast(message) {
   toast.textContent = message;
   toast.classList.add("show");
-  window.setTimeout(() => toast.classList.remove("show"), 2300);
+  setTimeout(() => toast.classList.remove("show"), 2300);
 }
 
-function openMission() {
-  missionModal.classList.add("open");
-  missionModal.setAttribute("aria-hidden", "false");
-}
-
-function applyRecoveredState() {
-  document.querySelector("#truth-label").textContent = "51%";
-  document.querySelector("#truth-bar").style.width = "51%";
-  const fragment = document.querySelector("#new-fragment");
-  fragment.classList.remove("locked-fragment");
-  fragment.innerHTML = `
-    <span class="fragment-no">残页 04 · 已寻回</span>
-    <h4>雨夜来信</h4>
-    <p>“火不在炉中。若你听懂了回响，就去找赤山。”</p>
-    <small>来自铸七 · 渝州第七码头</small>`;
-  document.querySelector("#invite-condition").classList.add("done");
-  document.querySelector("#invite-condition").textContent = "寻回「雨夜来信」";
-  document.querySelector(".invite-status").textContent = "条件完成 · 等待开炉";
+function applyChoice(name, trait) {
+  const trace = document.querySelector("#choice-trace");
+  trace.classList.remove("pending");
+  trace.innerHTML = `<span>第三章 · 择意</span><strong>${name} · 器格「${trait}」</strong><small>这是你的个人显现，不是标准答案</small>`;
+  document.querySelector("#chapter-label").textContent = "第四章 / 六章";
+  document.querySelectorAll(".chapter-dots i")[2].className = "done";
+  document.querySelectorAll(".chapter-dots i")[3].className = "current";
+  document.querySelector(".invite-status").textContent = "候选档案 · 3 / 6 章完成";
+  document.querySelectorAll(".invite-rules span")[2].classList.add("done");
 }
 
 navItems.forEach((item) => item.addEventListener("click", () => goTo(item.dataset.target)));
 document.querySelectorAll("[data-goto]").forEach((item) => item.addEventListener("click", () => goTo(item.dataset.goto)));
-document.querySelectorAll(".start-mission").forEach((button) => button.addEventListener("click", openMission));
-document.querySelector(".modal-close").addEventListener("click", () => missionModal.classList.remove("open"));
+document.querySelectorAll(".open-rite").forEach((item) => item.addEventListener("click", () => riteModal.classList.add("open")));
+document.querySelector(".modal-close").addEventListener("click", () => riteModal.classList.remove("open"));
 
-document.querySelectorAll(".sound-options button").forEach((button) => {
+document.querySelectorAll(".choice-list button").forEach((button) => {
   button.addEventListener("click", () => {
-    document.querySelectorAll(".sound-options button").forEach((item) => item.classList.remove("selected"));
+    document.querySelectorAll(".choice-list button").forEach((item) => item.classList.remove("selected"));
     button.classList.add("selected");
-    selectedAnswer = button.dataset.answer;
-    document.querySelector(".submit-answer").disabled = false;
+    choice = { name: button.dataset.choice, trait: button.dataset.trait };
+    document.querySelector(".confirm-choice").disabled = false;
   });
 });
 
-document.querySelector(".submit-answer").addEventListener("click", () => {
-  if (selectedAnswer !== "correct") {
-    showToast("声音不符：尾音里没有第二次回震");
-    return;
-  }
-  missionModal.classList.remove("open");
-  revealModal.classList.add("open");
-  localStorage.setItem("panjiArchive04", "recovered");
-  applyRecoveredState();
+document.querySelector(".confirm-choice").addEventListener("click", () => {
+  if (!choice) return;
+  localStorage.setItem("panjiChoice", JSON.stringify(choice));
+  applyChoice(choice.name, choice.trait);
+  riteModal.classList.remove("open");
+  showToast(`第三章完成 · 初始器格「${choice.trait}」已显现`);
 });
 
-document.querySelector(".finish-reveal").addEventListener("click", () => {
-  revealModal.classList.remove("open");
-  goTo("letters");
-  showToast("残页已收入器谱 · 开炉条件完成");
-});
-
-document.querySelectorAll(".element").forEach((button) => {
+document.querySelectorAll(".intent-grid button").forEach((button) => {
   button.addEventListener("click", () => {
-    document.querySelectorAll(".element").forEach((item) => item.classList.remove("active"));
-    button.classList.add("active");
-    if (button.dataset.element === "金") showToast("金脉已显现：结构、回声与铸痕");
-    else showToast(`${button.dataset.element}脉尚未显现 · 需要获得对应器物`);
+    document.querySelectorAll(".intent-grid button").forEach((item) => item.classList.remove("selected"));
+    button.classList.add("selected");
+    intent = { symbol: button.dataset.intent, name: button.dataset.name, copy: button.dataset.copy };
+    document.querySelector("#intent-title").textContent = `今日守护意图 · ${intent.symbol}`;
+    document.querySelector("#intent-copy").textContent = intent.copy;
+    document.querySelector(".begin-attune").disabled = false;
+    document.querySelector(".begin-attune").textContent = "开始今日随行";
   });
 });
 
-document.querySelectorAll(".vein-node").forEach((button) => {
-  button.addEventListener("click", () => {
-    if (button.classList.contains("gold")) showToast("已识别：金脉 · 记忆结构");
-    else showToast("该器脉档案仍被封存");
-  });
+document.querySelector(".begin-attune").addEventListener("click", () => {
+  if (!intent) return;
+  document.querySelector("#energy-fill").style.width = "33%";
+  document.querySelector("#energy-label").textContent = "今日能量 1 / 3";
+  document.querySelector("#main-crystal").classList.add("charged");
+  document.querySelector("#crystal-name").textContent = `${intent.name}正在形成`;
+  document.querySelector("#crystal-story").textContent = `${intent.copy} 完成三次随行后，这份意图会凝结为带有日期与故事的个人晶体。`;
+  crystalModal.classList.add("open");
 });
 
-document.querySelector("#inspect-invite").addEventListener("click", () => {
-  if (localStorage.getItem("panjiArchive04") === "recovered") {
-    showToast("邀请条件已完成 · 等待七月初七开炉");
-  } else {
-    goTo("missions");
-    showToast("线索指向主线异闻「听见沉默的金属」");
-  }
+document.querySelector(".close-crystal").addEventListener("click", () => {
+  crystalModal.classList.remove("open");
+  showToast("今日意图已保存 · 晶体进度 1 / 3");
 });
 
-document.querySelectorAll(".mission-tabs button").forEach((button) => {
-  button.addEventListener("click", () => {
-    document.querySelectorAll(".mission-tabs button").forEach((item) => item.classList.remove("active"));
-    button.classList.add("active");
-    showToast(`${button.textContent}异闻已切换`);
-  });
+document.querySelectorAll(".four-artifacts button:not(.active)").forEach((button) => {
+  button.addEventListener("click", () => showToast(`${button.querySelector("b").textContent}档案将在后续开炉前显现`));
 });
 
-if (localStorage.getItem("panjiArchive04") === "recovered") applyRecoveredState();
+const savedChoice = localStorage.getItem("panjiChoice");
+if (savedChoice) {
+  choice = JSON.parse(savedChoice);
+  applyChoice(choice.name, choice.trait);
+}
