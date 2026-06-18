@@ -1,92 +1,95 @@
 const pages = document.querySelectorAll(".page");
 const navItems = document.querySelectorAll(".nav-item");
 const title = document.querySelector("#page-title");
-const riteModal = document.querySelector("#rite-modal");
-const crystalModal = document.querySelector("#crystal-modal");
 const toast = document.querySelector("#toast");
-const titles = { candidate: "候选者档案", trials: "持器试炼", energy: "今日蓄能", invitation: "开炉邀请" };
-let choice = null;
-let intent = null;
+const modal = document.querySelector("#reveal-modal");
+const titles = { home: "今日布阵", artifact: "我的本命器", explore: "地点探索", reveal: "显现阵图" };
 
+let state = JSON.parse(localStorage.getItem("panjiCoreState") || "{}");
+state = { carried: false, carryDays: 12, arrayCount: 7, placeCount: 4, selectedArray: "归途", selectedPlace: "雨后街角", selectedTrace: "雨 / 石路 / 回家", ...state };
+
+function save() { localStorage.setItem("panjiCoreState", JSON.stringify(state)); }
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 2300);
+}
 function goTo(page) {
   pages.forEach((item) => item.classList.toggle("active", item.dataset.page === page));
   navItems.forEach((item) => item.classList.toggle("active", item.dataset.target === page));
   title.textContent = titles[page];
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
-
-function showToast(message) {
-  toast.textContent = message;
-  toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 2300);
-}
-
-function applyChoice(name, trait) {
-  const trace = document.querySelector("#choice-trace");
-  trace.classList.remove("pending");
-  trace.innerHTML = `<span>第三章 · 择意</span><strong>${name} · 器格「${trait}」</strong><small>这是你的个人显现，不是标准答案</small>`;
-  document.querySelector("#chapter-label").textContent = "第四章 / 六章";
-  document.querySelectorAll(".chapter-dots i")[2].className = "done";
-  document.querySelectorAll(".chapter-dots i")[3].className = "current";
-  document.querySelector(".invite-status").textContent = "候选档案 · 3 / 6 章完成";
-  document.querySelectorAll(".invite-rules span")[2].classList.add("done");
+function render() {
+  document.querySelector("#carry-state").textContent = state.carried ? "今日已确认携带 · 随行中" : "今日尚未确认携带";
+  document.querySelector("#carry-days").textContent = state.carryDays;
+  document.querySelector("#array-count").textContent = state.arrayCount;
+  document.querySelector("#place-count").textContent = state.placeCount;
+  document.querySelector("#p-carry").textContent = `${Math.min(state.carryDays - 7, 7)} / 7`;
+  document.querySelector("#p-place").textContent = `${Math.min(state.placeCount, 5)} / 5`;
+  document.querySelector("#carry-track").style.width = `${Math.min((state.carryDays - 7) / 7 * 100, 100)}%`;
+  document.querySelector("#place-track").style.width = `${Math.min(state.placeCount / 5 * 100, 100)}%`;
 }
 
 navItems.forEach((item) => item.addEventListener("click", () => goTo(item.dataset.target)));
-document.querySelectorAll("[data-goto]").forEach((item) => item.addEventListener("click", () => goTo(item.dataset.goto)));
-document.querySelectorAll(".open-rite").forEach((item) => item.addEventListener("click", () => riteModal.classList.add("open")));
-document.querySelector(".modal-close").addEventListener("click", () => riteModal.classList.remove("open"));
 
-document.querySelectorAll(".choice-list button").forEach((button) => {
+document.querySelectorAll(".array-card").forEach((button) => {
   button.addEventListener("click", () => {
-    document.querySelectorAll(".choice-list button").forEach((item) => item.classList.remove("selected"));
-    button.classList.add("selected");
-    choice = { name: button.dataset.choice, trait: button.dataset.trait };
-    document.querySelector(".confirm-choice").disabled = false;
+    document.querySelectorAll(".array-card").forEach((item) => item.classList.remove("active"));
+    button.classList.add("active");
+    state.selectedArray = button.dataset.array;
+    document.querySelector("#array-title").textContent = `回响 · ${state.selectedArray}阵`;
+    document.querySelector("#array-copy").textContent = button.dataset.copy;
+    save();
   });
 });
 
-document.querySelector(".confirm-choice").addEventListener("click", () => {
-  if (!choice) return;
-  localStorage.setItem("panjiChoice", JSON.stringify(choice));
-  applyChoice(choice.name, choice.trait);
-  riteModal.classList.remove("open");
-  showToast(`第三章完成 · 初始器格「${choice.trait}」已显现`);
+document.querySelector("#confirm-carry").addEventListener("click", () => {
+  if (!state.carried) {
+    state.carried = true;
+    state.carryDays += 1;
+    showToast("携带已确认 · 今日随行开始");
+  } else {
+    showToast("今天已经确认过携带");
+  }
+  save();
+  render();
 });
 
-document.querySelectorAll(".intent-grid button").forEach((button) => {
+document.querySelectorAll(".tag").forEach((button) => {
   button.addEventListener("click", () => {
-    document.querySelectorAll(".intent-grid button").forEach((item) => item.classList.remove("selected"));
-    button.classList.add("selected");
-    intent = { symbol: button.dataset.intent, name: button.dataset.name, copy: button.dataset.copy };
-    document.querySelector("#intent-title").textContent = `今日守护意图 · ${intent.symbol}`;
-    document.querySelector("#intent-copy").textContent = intent.copy;
-    document.querySelector(".begin-attune").disabled = false;
-    document.querySelector(".begin-attune").textContent = "开始今日随行";
+    document.querySelectorAll(".tag").forEach((item) => item.classList.remove("active"));
+    button.classList.add("active");
+    state.selectedPlace = button.dataset.place;
+    state.selectedTrace = button.dataset.trace;
+    document.querySelector("#place-title").textContent = state.selectedPlace;
+    save();
   });
 });
 
-document.querySelector(".begin-attune").addEventListener("click", () => {
-  if (!intent) return;
-  document.querySelector("#energy-fill").style.width = "33%";
-  document.querySelector("#energy-label").textContent = "今日能量 1 / 3";
-  document.querySelector("#main-crystal").classList.add("charged");
-  document.querySelector("#crystal-name").textContent = `${intent.name}正在形成`;
-  document.querySelector("#crystal-story").textContent = `${intent.copy} 完成三次随行后，这份意图会凝结为带有日期与故事的个人晶体。`;
-  crystalModal.classList.add("open");
+document.querySelector("#record-place").addEventListener("click", () => {
+  state.placeCount += 1;
+  const item = document.createElement("article");
+  item.innerHTML = `<b>${state.selectedPlace}</b><span>${state.selectedTrace} · 今日</span>`;
+  document.querySelector("#trace-list").prepend(item);
+  showToast("环境痕迹已记录 · 器物显现度提升");
+  save();
+  render();
 });
 
-document.querySelector(".close-crystal").addEventListener("click", () => {
-  crystalModal.classList.remove("open");
-  showToast("今日意图已保存 · 晶体进度 1 / 3");
+document.querySelector("#reveal-check").addEventListener("click", () => {
+  const carryLeft = Math.max(0, 14 - state.carryDays);
+  const placeLeft = Math.max(0, 5 - state.placeCount);
+  const ready = carryLeft === 0 && placeLeft === 0;
+  document.querySelector("#reveal-copy").textContent = ready ? "条件已完成。下一次布阵后，雾中回响将显现第一段隐藏记录。" : `还差 ${carryLeft} 次携带确认和 ${placeLeft} 次地点探索。它已经接近第一次回应。`;
+  modal.classList.add("open");
 });
+
+document.querySelector(".modal-close").addEventListener("click", () => modal.classList.remove("open"));
+document.querySelector(".close-modal").addEventListener("click", () => modal.classList.remove("open"));
 
 document.querySelectorAll(".four-artifacts button:not(.active)").forEach((button) => {
-  button.addEventListener("click", () => showToast(`${button.querySelector("b").textContent}档案将在后续开炉前显现`));
+  button.addEventListener("click", () => showToast(`${button.querySelector("b").textContent}会在后续炉次开放`));
 });
 
-const savedChoice = localStorage.getItem("panjiChoice");
-if (savedChoice) {
-  choice = JSON.parse(savedChoice);
-  applyChoice(choice.name, choice.trait);
-}
+render();
