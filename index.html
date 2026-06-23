@@ -3,46 +3,77 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0f1214">
-  <title>盘迹 · NFC 灯塔测试版</title>
+  <meta name="theme-color" content="#0c1012">
+  <title>盘迹 · 灯塔唤醒</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="app-shell">
     <header class="topbar">
       <div>
-        <span class="eyebrow">PANJI NFC TEST</span>
-        <h1 id="page-title">灯塔认主</h1>
+        <span class="eyebrow">PANJI / LIGHTHOUSE</span>
+        <h1 id="page-title">灯塔</h1>
       </div>
       <button class="avatar">塔</button>
     </header>
 
     <main>
-      <section class="page active" data-page="bind">
+      <section class="page active" data-page="tower">
         <article class="hero-card">
           <div class="hero-meta">
             <span class="status-dot" id="status-dot"></span>
-            <span id="bind-status">尚未绑定器物</span>
-            <span class="serial" id="tag-id">等待 NFC</span>
+            <span id="bind-status">尚未听见你的触碰</span>
+            <span class="serial" id="tag-id">未醒</span>
           </div>
+
           <div class="lighthouse-stage">
+            <div class="sea-ring ring-one"></div>
+            <div class="sea-ring ring-two"></div>
             <div class="beam beam-a"></div>
             <div class="beam beam-b"></div>
             <div class="lighthouse">
               <span></span><i></i><b></b>
             </div>
-            <span class="edition" id="current-model-label">灯塔 · 晨雾模型</span>
+            <span class="edition" id="current-model-label">晨雾灯塔</span>
           </div>
+
           <div class="artifact-copy">
-            <span class="maker">FIRST TEST / 3 LIGHTHOUSE MODELS</span>
-            <h2 id="hero-title">第一次触碰后认主</h2>
-            <p id="hero-copy">用手机扫描 NFC tag。第一次扫描会把这件灯塔绑定为你的测试器物。</p>
+            <span class="maker">NFC OBJECT TEST / 3 MODELS</span>
+            <h2 id="hero-title">靠近它，灯会醒来</h2>
+            <p id="hero-copy">第一次唤醒不是任务，而是这座灯塔开始记住你。</p>
+          </div>
+
+          <div class="state-band">
+            <div><span>第几夜</span><strong id="night-index">0</strong></div>
+            <div><span>唤醒</span><strong id="wake-count">0</strong></div>
+            <div><span>器韵</span><strong id="aura-short">未醒</strong></div>
+          </div>
+        </article>
+
+        <article class="omen-card">
+          <span class="meta">当前状态</span>
+          <h3 id="aura-title">未醒</h3>
+          <p id="aura-copy">第一次扫描后，灯塔会进入初醒状态。</p>
+          <div class="ritual-orbit">
+            <span id="orbit-1">一夜</span>
+            <span id="orbit-2">二夜</span>
+            <span id="orbit-3">三夜</span>
+          </div>
+        </article>
+
+        <article class="action-card">
+          <span class="meta">唤醒灯塔</span>
+          <h3>触碰 NFC，或先模拟</h3>
+          <p id="nfc-help">Android Chrome + HTTPS 可尝试真实 Web NFC。其他设备可先用模拟扫描跑通三天流程。</p>
+          <div class="button-row">
+            <button class="primary-button" id="scan-nfc">靠近灯塔</button>
+            <button class="ghost-button" id="mock-scan">模拟触碰</button>
           </div>
         </article>
 
         <div class="section-head">
-          <div><span class="eyebrow">MODEL SELECT</span><h3>三个灯塔模型</h3></div>
-          <span class="chip">测试用</span>
+          <div><span class="eyebrow">THREE FORMS</span><h3>三座测试灯塔</h3></div>
+          <span class="chip">绑定前可切换</span>
         </div>
         <div class="model-grid">
           <button class="model-card active" data-model="LH-001"><b>晨雾灯塔</b><span>安定 / 归途 / 微光</span></button>
@@ -50,94 +81,63 @@
           <button class="model-card" data-model="LH-003"><b>归潮灯塔</b><span>回声 / 水边 / 潮光</span></button>
         </div>
 
-        <article class="action-card">
-          <span class="meta">NFC 扫描</span>
-          <h3>靠近灯塔 tag</h3>
-          <p id="nfc-help">支持 Web NFC 的 Android Chrome 可直接扫描。iPhone 或不支持 NFC 的浏览器可使用模拟扫描测试流程。</p>
-          <div class="button-row">
-            <button class="primary-button" id="scan-nfc">开始 NFC 扫描</button>
-            <button class="ghost-button" id="mock-scan">模拟扫描</button>
-          </div>
-        </article>
-
-        <div class="quick-stats">
-          <div><strong id="day-index">0</strong><span>认主日</span></div>
-          <div><strong id="wake-count">0</strong><span>唤醒</span></div>
-          <div><strong id="aura-short">未醒</strong><span>器韵</span></div>
-        </div>
+        <button class="time-button" id="next-day">测试用：让时间进入下一夜</button>
       </section>
 
-      <section class="page" data-page="ritual">
+      <section class="page" data-page="echoes">
         <div class="section-intro">
-          <span class="eyebrow">THREE DAY BONDING</span>
-          <h2>3 天认主流程</h2>
-          <p>每天扫描灯塔一次，记录一次唤醒。第 3 天完成认主，并解锁第一段记忆碎片。</p>
+          <span class="eyebrow">ECHO LOG</span>
+          <h2>回声</h2>
+          <p>每一次靠近，都会在灯塔里留下一道回声。这里记录的不是任务完成，而是它被唤醒的痕迹。</p>
         </div>
-        <div class="ritual-track">
-          <article id="ritual-1"><span>01</span><div><small>第一天</small><h3>初醒</h3><p>第一次扫描，灯塔确认你的存在。</p></div><b>未开始</b></article>
-          <article id="ritual-2"><span>02</span><div><small>第二天</small><h3>复燃</h3><p>再次唤醒，器韵开始稳定。</p></div><b>未解锁</b></article>
-          <article id="ritual-3"><span>03</span><div><small>第三天</small><h3>认主</h3><p>完成第三日扫描，灯塔正式认主。</p></div><b>未解锁</b></article>
-        </div>
-        <article class="action-card">
-          <span class="meta">测试辅助</span>
-          <h3>模拟日期变化</h3>
-          <p>真实测试会按自然日期计算。现在为了快速演示，可以手动进入下一天。</p>
-          <button class="ghost-button wide" id="next-day">模拟进入下一天</button>
-        </article>
-      </section>
 
-      <section class="page" data-page="wake">
-        <div class="section-intro">
-          <span class="eyebrow">WAKE LOG</span>
-          <h2>唤醒记录</h2>
-          <p>每一次 NFC 扫描都会记录为一次唤醒。唤醒次数和日期变化共同影响器韵状态。</p>
-        </div>
         <article class="passport-card">
           <span class="maker" id="bound-model">未绑定灯塔</span>
-          <h3 id="wake-title">等待第一次唤醒</h3>
+          <h3 id="wake-title">等待第一道回声</h3>
           <p id="wake-copy">扫描 NFC 后，这里会显示绑定模型、唤醒次数和最近一次触碰时间。</p>
           <div class="passport-grid">
-            <span><b id="today-wakes">0</b>今日唤醒</span>
-            <span><b id="total-wakes">0</b>总唤醒</span>
-            <span><b id="bound-date">--</b>绑定日期</span>
-            <span><b id="last-wake">--</b>最近唤醒</span>
+            <span><b id="today-wakes">0</b>今夜回声</span>
+            <span><b id="total-wakes">0</b>总回声</span>
+            <span><b id="bound-date">--</b>初醒日期</span>
+            <span><b id="last-wake">--</b>最近触碰</span>
           </div>
         </article>
+
         <div class="section-head">
-          <div><span class="eyebrow">RECENT</span><h3>最近扫描</h3></div>
+          <div><span class="eyebrow">RECENT</span><h3>最近回声</h3></div>
         </div>
         <div class="trace-list" id="wake-list"></div>
       </section>
 
-      <section class="page" data-page="aura">
+      <section class="page" data-page="memory">
         <div class="section-intro">
-          <span class="eyebrow">OBJECT TONE</span>
-          <h2>器韵状态</h2>
-          <p>测试版只根据两个公平数据计算：扫描唤醒次数，以及认主天数。</p>
+          <span class="eyebrow">FIRST MEMORY</span>
+          <h2>记忆</h2>
+          <p>第三夜到来，并留下足够回声后，第一段记忆会自然松动。</p>
         </div>
+
         <article class="manifest-card">
-          <span class="meta">当前器韵</span>
-          <h3 id="aura-title">未醒</h3>
-          <p id="aura-copy">第一次扫描后，灯塔会进入初醒状态。</p>
-          <div class="progress-row"><span>认主天数</span><b id="p-days">0 / 3</b></div>
+          <span class="meta">显现条件</span>
+          <h3>第一段记忆</h3>
+          <p>条件是公开的，显现内容是未知的。灯塔需要三夜，也需要至少三次被唤醒。</p>
+          <div class="progress-row"><span>经过夜数</span><b id="p-days">0 / 3</b></div>
           <div class="track"><i id="days-track"></i></div>
-          <div class="progress-row"><span>唤醒次数</span><b id="p-wakes">0 / 3</b></div>
+          <div class="progress-row"><span>唤醒回声</span><b id="p-wakes">0 / 3</b></div>
           <div class="track"><i id="wakes-track"></i></div>
         </article>
 
         <article class="memory-card locked" id="memory-card">
           <span class="meta">记忆碎片 01</span>
-          <h3>尚未解锁</h3>
-          <p>第 3 天认主成功后，第一段灯塔记忆会显现。</p>
+          <h3>尚未松动</h3>
+          <p>第三夜之后，第一段灯塔记忆会显现。</p>
         </article>
       </section>
     </main>
 
     <nav class="bottom-nav">
-      <button class="nav-item active" data-target="bind"><span>扫</span><small>扫描</small></button>
-      <button class="nav-item" data-target="ritual"><span>认</span><small>认主</small></button>
-      <button class="nav-item" data-target="wake"><span>醒</span><small>唤醒</small></button>
-      <button class="nav-item" data-target="aura"><span>韵</span><small>器韵</small></button>
+      <button class="nav-item active" data-target="tower"><span>塔</span><small>灯塔</small></button>
+      <button class="nav-item" data-target="echoes"><span>声</span><small>回声</small></button>
+      <button class="nav-item" data-target="memory"><span>忆</span><small>记忆</small></button>
     </nav>
   </div>
 
@@ -145,11 +145,11 @@
   <div class="modal-backdrop" id="scan-modal">
     <div class="modal">
       <button class="modal-close">×</button>
-      <span class="eyebrow">NFC EVENT</span>
-      <div class="modal-seal">塔</div>
-      <h2 id="scan-result-title">灯塔已唤醒</h2>
-      <p id="scan-result-copy">这次扫描已记录。</p>
-      <button class="primary-button close-modal">继续测试</button>
+      <span class="eyebrow">LIGHTHOUSE WOKE</span>
+      <div class="modal-seal">光</div>
+      <h2 id="scan-result-title">灯塔已醒</h2>
+      <p id="scan-result-copy">这次触碰已被记录。</p>
+      <button class="primary-button close-modal">收起光</button>
     </div>
   </div>
   <script src="app.js"></script>
