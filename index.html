@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0c1012">
-  <title>盘迹 · 灯塔唤醒</title>
+  <title>盘迹 · 数字时代的文玩</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="app-shell">
     <header class="topbar">
       <div>
-        <span class="eyebrow">PANJI / LIGHTHOUSE</span>
+        <span class="eyebrow">PANJI / SLOW OBJECT</span>
         <h1 id="page-title">灯塔</h1>
       </div>
       <button class="avatar">塔</button>
@@ -22,8 +22,8 @@
         <article class="hero-card">
           <div class="hero-meta">
             <span class="status-dot" id="status-dot"></span>
-            <span id="bind-status">尚未听见你的触碰</span>
-            <span class="serial" id="tag-id">未醒</span>
+            <span id="bind-status">尚未记住你的气息</span>
+            <span class="serial" id="tag-id">灯芯未温</span>
           </div>
 
           <div class="lighthouse-stage">
@@ -38,33 +38,33 @@
           </div>
 
           <div class="artifact-copy">
-            <span class="maker">NFC OBJECT TEST / 3 MODELS</span>
-            <h2 id="hero-title">靠近它，灯会醒来</h2>
-            <p id="hero-copy">第一次唤醒不是任务，而是这座灯塔开始记住你。</p>
+            <span class="maker">数字时代的文玩</span>
+            <h2 id="hero-title">靠近它，灯芯会变暖</h2>
+            <p id="hero-copy">你不是在升级器物。你是在和它建立关系。</p>
           </div>
 
-          <div class="state-band">
-            <div><span>第几夜</span><strong id="night-index">0</strong></div>
-            <div><span>唤醒</span><strong id="wake-count">0</strong></div>
-            <div><span>器韵</span><strong id="aura-short">未醒</strong></div>
+          <div class="state-band quiet">
+            <div><span>气息</span><strong id="breath-state">未留</strong></div>
+            <div><span>灯火</span><strong id="warmth-state">微冷</strong></div>
+            <div><span>记忆</span><strong id="memory-state">沉睡</strong></div>
           </div>
         </article>
 
         <article class="omen-card">
-          <span class="meta">当前状态</span>
+          <span class="meta">灯塔的气息</span>
           <h3 id="aura-title">未醒</h3>
           <p id="aura-copy">第一次扫描后，灯塔会进入初醒状态。</p>
           <div class="ritual-orbit">
-            <span id="orbit-1">一夜</span>
-            <span id="orbit-2">二夜</span>
-            <span id="orbit-3">三夜</span>
+            <span id="orbit-1">灯芯</span>
+            <span id="orbit-2">潮声</span>
+            <span id="orbit-3">余温</span>
           </div>
         </article>
 
         <article class="action-card">
-          <span class="meta">唤醒灯塔</span>
-          <h3>触碰 NFC，或先模拟</h3>
-          <p id="nfc-help">Android Chrome + HTTPS 可尝试真实 Web NFC。其他设备可先用模拟扫描跑通三天流程。</p>
+          <span class="meta">靠近器物</span>
+          <h3>让它记住一次靠近</h3>
+          <p id="nfc-help">真实测试可用 NFC。没有 tag 时，用模拟触碰感受关系变化。</p>
           <div class="button-row">
             <button class="primary-button" id="scan-nfc">靠近灯塔</button>
             <button class="ghost-button" id="mock-scan">模拟触碰</button>
@@ -81,62 +81,60 @@
           <button class="model-card" data-model="LH-003"><b>归潮灯塔</b><span>回声 / 水边 / 潮光</span></button>
         </div>
 
-        <button class="time-button" id="next-day">测试用：让时间进入下一夜</button>
+        <button class="time-button" id="next-day">测试用：让时间慢慢过去</button>
       </section>
 
       <section class="page" data-page="echoes">
         <div class="section-intro">
-          <span class="eyebrow">ECHO LOG</span>
-          <h2>回声</h2>
-          <p>每一次靠近，都会在灯塔里留下一道回声。这里记录的不是任务完成，而是它被唤醒的痕迹。</p>
+          <span class="eyebrow">QUIET TRACE</span>
+          <h2>痕迹</h2>
+          <p>有些变化不会立刻出现。它只是把你的靠近留在灯芯里。</p>
         </div>
 
         <article class="passport-card">
           <span class="maker" id="bound-model">未绑定灯塔</span>
-          <h3 id="wake-title">等待第一道回声</h3>
-          <p id="wake-copy">扫描 NFC 后，这里会显示绑定模型、唤醒次数和最近一次触碰时间。</p>
+          <h3 id="wake-title">尚未留下痕迹</h3>
+          <p id="wake-copy">靠近之后，这里只保留少量记录。系统不会解释一切。</p>
           <div class="passport-grid">
-            <span><b id="today-wakes">0</b>今夜回声</span>
-            <span><b id="total-wakes">0</b>总回声</span>
-            <span><b id="bound-date">--</b>初醒日期</span>
-            <span><b id="last-wake">--</b>最近触碰</span>
+            <span><b id="today-wakes">--</b>今日气息</span>
+            <span><b id="total-wakes">--</b>留痕深度</span>
+            <span><b id="bound-date">--</b>初次靠近</span>
+            <span><b id="last-wake">--</b>最近余温</span>
           </div>
         </article>
 
         <div class="section-head">
-          <div><span class="eyebrow">RECENT</span><h3>最近回声</h3></div>
+          <div><span class="eyebrow">RECENT</span><h3>最近痕迹</h3></div>
         </div>
         <div class="trace-list" id="wake-list"></div>
       </section>
 
       <section class="page" data-page="memory">
         <div class="section-intro">
-          <span class="eyebrow">FIRST MEMORY</span>
+          <span class="eyebrow">FRAGMENT</span>
           <h2>记忆</h2>
-          <p>第三夜到来，并留下足够回声后，第一段记忆会自然松动。</p>
+          <p>世界观永远只展示一小部分。你看到的，可能只是灯塔愿意露出的一角。</p>
         </div>
 
         <article class="manifest-card">
-          <span class="meta">显现条件</span>
-          <h3>第一段记忆</h3>
-          <p>条件是公开的，显现内容是未知的。灯塔需要三夜，也需要至少三次被唤醒。</p>
-          <div class="progress-row"><span>经过夜数</span><b id="p-days">0 / 3</b></div>
-          <div class="track"><i id="days-track"></i></div>
-          <div class="progress-row"><span>唤醒回声</span><b id="p-wakes">0 / 3</b></div>
-          <div class="track"><i id="wakes-track"></i></div>
+          <span class="meta">残缺记录</span>
+          <h3>最后的灯芯</h3>
+          <p id="fragment-hint">它还没有准备好说出第一句话。只是灯火似乎变得更加温暖。</p>
+          <div class="soft-meter"><i id="soft-meter"></i></div>
+          <small id="soft-caption">变化以天、周、月为单位发生。</small>
         </article>
 
         <article class="memory-card locked" id="memory-card">
           <span class="meta">记忆碎片 01</span>
           <h3>尚未松动</h3>
-          <p>第三夜之后，第一段灯塔记忆会显现。</p>
+          <p>有些记忆不能被催促。它只会在关系足够安静时出现。</p>
         </article>
       </section>
     </main>
 
     <nav class="bottom-nav">
       <button class="nav-item active" data-target="tower"><span>塔</span><small>灯塔</small></button>
-      <button class="nav-item" data-target="echoes"><span>声</span><small>回声</small></button>
+      <button class="nav-item" data-target="echoes"><span>痕</span><small>痕迹</small></button>
       <button class="nav-item" data-target="memory"><span>忆</span><small>记忆</small></button>
     </nav>
   </div>
@@ -145,11 +143,11 @@
   <div class="modal-backdrop" id="scan-modal">
     <div class="modal">
       <button class="modal-close">×</button>
-      <span class="eyebrow">LIGHTHOUSE WOKE</span>
+      <span class="eyebrow">THE LIGHT REMEMBERS</span>
       <div class="modal-seal">光</div>
-      <h2 id="scan-result-title">灯塔已醒</h2>
-      <p id="scan-result-copy">这次触碰已被记录。</p>
-      <button class="primary-button close-modal">收起光</button>
+      <h2 id="scan-result-title">灯芯变暖了</h2>
+      <p id="scan-result-copy">这次靠近被它安静地记住。</p>
+      <button class="primary-button close-modal">让它继续亮着</button>
     </div>
   </div>
   <script src="app.js"></script>
