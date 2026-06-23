@@ -3,7 +3,7 @@ const navItems = document.querySelectorAll(".nav-item");
 const title = document.querySelector("#page-title");
 const toast = document.querySelector("#toast");
 const modal = document.querySelector("#scan-modal");
-const titles = { tower: "灯塔", echoes: "回声", memory: "记忆" };
+const titles = { tower: "灯塔", echoes: "痕迹", memory: "记忆" };
 
 const models = {
   "LH-001": { name: "晨雾灯塔", tone: "微光", memory: "雾里第一束光不是为了照远方，而是为了确认你还在路上。" },
@@ -54,10 +54,10 @@ function parseModelFromPayload(payload) {
 function getAura() {
   const n = nightIndex();
   const wakes = state.wakeLogs.length;
-  if (!state.bound) return { title: "未醒", short: "未醒", copy: "它还没有听见你的第一次靠近。" };
-  if (n >= 3 && wakes >= 3) return { title: "灯火已定", short: "已认主", copy: "第三夜已经过去，灯塔不再只是被扫描的 tag，它开始保留你的回声。" };
-  if (n >= 2 || wakes >= 2) return { title: "复燃", short: "复燃", copy: "第二道回声进入塔身，光线开始稳定。" };
-  return { title: "初醒", short: "初醒", copy: "第一次触碰完成。灯塔确认了你的存在。" };
+  if (!state.bound) return { title: "灯芯未温", short: "未温", copy: "它还没有记住你的气息。" };
+  if (n >= 3 && wakes >= 3) return { title: "灯火变得更加温暖", short: "温暖", copy: "它似乎开始记住你了。不是因为完成了什么，而是因为你又靠近了一次。" };
+  if (n >= 2 || wakes >= 2) return { title: "灯火有了回温", short: "回温", copy: "你离开后，灯芯里仍留着一点余热。" };
+  return { title: "第一缕微光", short: "微光", copy: "它没有说话，只是亮了一下。" };
 }
 
 function recordWake({ tagId, modelId, source }) {
@@ -79,8 +79,8 @@ function recordWake({ tagId, modelId, source }) {
   render();
   const model = models[state.modelId];
   const first = state.wakeLogs.length === 1;
-  document.querySelector("#scan-result-title").textContent = first ? `${model.name}初醒` : `${model.name}留下回声`;
-  document.querySelector("#scan-result-copy").textContent = `第 ${nightIndex()} 夜 · 第 ${state.wakeLogs.length} 道回声已进入灯塔。`;
+  document.querySelector("#scan-result-title").textContent = first ? `${model.name}亮了一下` : `${model.name}更温暖了`;
+  document.querySelector("#scan-result-copy").textContent = first ? "第一次靠近被它记住。之后的变化会很慢。" : "灯火变得更加温暖。";
   modal.classList.add("open");
 }
 
@@ -92,8 +92,8 @@ async function scanNfc() {
   try {
     const reader = new NDEFReader();
     await reader.scan();
-    showToast("灯塔正在等待触碰，请靠近 NFC tag");
-    reader.onreadingerror = () => showToast("读取失败，请重新靠近 tag");
+    showToast("灯塔正在等待靠近");
+    reader.onreadingerror = () => showToast("它没有听清，请再靠近一点");
     reader.onreading = (event) => {
       let payload = "";
       for (const record of event.message.records) {
@@ -105,7 +105,7 @@ async function scanNfc() {
       recordWake({ tagId, modelId, source: "NFC" });
     };
   } catch (error) {
-    showToast(`NFC 启动失败：${error.message}`);
+    showToast(`NFC 没有醒来：${error.message}`);
   }
 }
 
@@ -115,27 +115,26 @@ function render() {
   const n = nightIndex();
   const wakes = state.wakeLogs.length;
   document.querySelector("#status-dot").classList.toggle("bound", state.bound);
-  document.querySelector("#bind-status").textContent = state.bound ? `${model.name} · ${aura.short}` : "尚未听见你的触碰";
-  document.querySelector("#tag-id").textContent = state.bound ? state.tagId : "未醒";
+  document.querySelector("#bind-status").textContent = state.bound ? `${model.name} · ${aura.short}` : "尚未记住你的气息";
+  document.querySelector("#tag-id").textContent = state.bound ? "已初见" : "灯芯未温";
   document.querySelector("#current-model-label").textContent = model.name;
-  document.querySelector("#hero-title").textContent = state.bound ? `${model.name}正在跟随你` : "靠近它，灯会醒来";
-  document.querySelector("#hero-copy").textContent = state.bound ? `第 ${n} 夜，${wakes} 道回声。第三夜之后，第一段记忆会松动。` : "第一次唤醒不是任务，而是这座灯塔开始记住你。";
-  document.querySelector("#night-index").textContent = n;
-  document.querySelector("#wake-count").textContent = wakes;
-  document.querySelector("#aura-short").textContent = aura.short;
+  document.querySelector("#hero-title").textContent = state.bound ? `${model.name}正在跟随你` : "靠近它，灯芯会变暖";
+  document.querySelector("#hero-copy").textContent = state.bound ? "它不会立刻改变。只是每一次靠近，都会让灯火更像你的温度。" : "你不是在升级器物。你是在和它建立关系。";
+  document.querySelector("#breath-state").textContent = state.bound ? "已留" : "未留";
+  document.querySelector("#warmth-state").textContent = aura.short;
+  document.querySelector("#memory-state").textContent = n >= 3 && wakes >= 3 ? "松动" : "沉睡";
   document.querySelector("#aura-title").textContent = aura.title;
   document.querySelector("#aura-copy").textContent = aura.copy;
   document.querySelector("#bound-model").textContent = state.bound ? `${model.name} · ${state.tagId}` : "未绑定灯塔";
-  document.querySelector("#wake-title").textContent = state.bound ? `${model.name}已有 ${wakes} 道回声` : "等待第一道回声";
-  document.querySelector("#wake-copy").textContent = state.bound ? `当前是第 ${n} 夜。器韵：${aura.short}。` : "扫描 NFC 后，这里会显示绑定模型、唤醒次数和最近一次触碰时间。";
-  document.querySelector("#today-wakes").textContent = todayWakeCount();
-  document.querySelector("#total-wakes").textContent = wakes;
+  document.querySelector("#wake-title").textContent = state.bound ? `${model.name}留下了一些痕迹` : "尚未留下痕迹";
+  document.querySelector("#wake-copy").textContent = state.bound ? "系统只保留很少的信息。大部分关系不需要被解释。" : "靠近之后，这里只保留少量记录。系统不会解释一切。";
+  document.querySelector("#today-wakes").textContent = todayWakeCount() > 0 ? "有" : "--";
+  document.querySelector("#total-wakes").textContent = wakes > 2 ? "深" : wakes > 0 ? "浅" : "--";
   document.querySelector("#bound-date").textContent = state.boundAt ? state.boundAt.slice(5, 10) : "--";
   document.querySelector("#last-wake").textContent = wakes ? new Date(state.wakeLogs[0].at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "--";
-  document.querySelector("#p-days").textContent = `${n} / 3`;
-  document.querySelector("#p-wakes").textContent = `${Math.min(wakes, 3)} / 3`;
-  document.querySelector("#days-track").style.width = `${Math.min(n / 3 * 100, 100)}%`;
-  document.querySelector("#wakes-track").style.width = `${Math.min(wakes / 3 * 100, 100)}%`;
+  document.querySelector("#fragment-hint").textContent = n >= 3 && wakes >= 3 ? "有一段记录松动了。它没有完整解释自己，只给你留下了一句话。" : "它还没有准备好说出第一句话。只是灯火似乎变得更加温暖。";
+  document.querySelector("#soft-meter").style.width = `${Math.min(((state.bound ? n : 0) + Math.min(wakes, 3)) / 6 * 100, 100)}%`;
+  document.querySelector("#soft-caption").textContent = n >= 3 && wakes >= 3 ? "一小段记忆浮上来了。" : "变化以天、周、月为单位发生。";
   renderOrbit(n, wakes);
   renderWakes();
   renderMemory(n, wakes, model);
@@ -153,13 +152,13 @@ function renderWakes() {
   const list = document.querySelector("#wake-list");
   list.innerHTML = "";
   if (!state.wakeLogs.length) {
-    list.innerHTML = "<article><b>暂无回声</b><span>靠近 NFC 或点击模拟触碰，留下第一道回声</span></article>";
+    list.innerHTML = "<article><b>暂无痕迹</b><span>靠近它，第一点余温会留下来</span></article>";
     return;
   }
   state.wakeLogs.slice(0, 8).forEach((log) => {
     const item = document.createElement("article");
     const time = new Date(log.at).toLocaleString([], { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
-    item.innerHTML = `<b>${models[log.modelId]?.name || "灯塔"} · ${log.source}</b><span>${time} · ${log.tagId}</span>`;
+    item.innerHTML = `<b>${models[log.modelId]?.name || "灯塔"} · 灯火回温</b><span>${time} · ${log.source}</span>`;
     list.appendChild(item);
   });
 }
@@ -170,7 +169,7 @@ function renderMemory(n, wakes, model) {
   card.classList.toggle("locked", !unlocked);
   card.innerHTML = unlocked
     ? `<span class="meta">记忆碎片 01 · 已显现</span><h3>${model.name}的第一段记忆</h3><p>${model.memory}</p>`
-    : `<span class="meta">记忆碎片 01</span><h3>尚未松动</h3><p>第三夜之后，第一段灯塔记忆会显现。</p>`;
+    : `<span class="meta">记忆碎片 01</span><h3>尚未松动</h3><p>有些记忆不能被催促。它只会在关系足够安静时出现。</p>`;
 }
 
 navItems.forEach((item) => item.addEventListener("click", () => goTo(item.dataset.target)));
@@ -182,7 +181,7 @@ document.querySelector("#next-day").addEventListener("click", () => {
   state.mockDayOffset += 1;
   save();
   render();
-  showToast(`时间进入第 ${nightIndex()} 夜`);
+  showToast("时间慢慢过去了一点");
 });
 document.querySelectorAll(".model-card").forEach((button) => {
   button.addEventListener("click", () => {
