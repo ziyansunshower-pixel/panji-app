@@ -1,92 +1,252 @@
-const pages = document.querySelectorAll(".page");
-const navItems = document.querySelectorAll(".nav-item");
-const title = document.querySelector("#page-title");
-const riteModal = document.querySelector("#rite-modal");
-const crystalModal = document.querySelector("#crystal-modal");
-const toast = document.querySelector("#toast");
-const titles = { candidate: "候选者档案", trials: "持器试炼", energy: "今日蓄能", invitation: "开炉邀请" };
-let choice = null;
-let intent = null;
+const STORAGE_KEY = "panji:lighthouse:v1";
+const DAY = 24 * 60 * 60 * 1000;
 
-function goTo(page) {
-  pages.forEach((item) => item.classList.toggle("active", item.dataset.page === page));
-  navItems.forEach((item) => item.classList.toggle("active", item.dataset.target === page));
-  title.textContent = titles[page];
-  window.scrollTo({ top: 0, behavior: "smooth" });
+const fragments = [
+  "北境炼器师相信，\n黑暗不会结束。\n因此他们学会了带着灯火继续前行。",
+  "灯塔并非为活人而造。",
+  "最后一个归乡者，\n从未归乡。"
+];
+
+const polishWhispers = [
+  "手心的温度留在了灯芯上。",
+  "它似乎更加熟悉你了。",
+  "这段时间没有消失。",
+  "黄铜慢慢安静下来。",
+  "灯火没有变亮，只是没有离开。"
+];
+
+const scanWhispers = [
+  "灯芯轻轻回应了一下。",
+  "它记住了这一次靠近。",
+  "风雪之外，有一处微光。",
+  "你和灯塔又相遇了一次。"
+];
+
+const $ = (selector) => document.querySelector(selector);
+
+const elements = {
+  bondState: $("#bond-state"),
+  lastMeeting: $("#last-meeting"),
+  artifactLine: $("#artifact-line"),
+  stateLabel: $("#state-label"),
+  daysLabel: $("#days-label"),
+  lastLabel: $("#last-label"),
+  patinaLabel: $("#patina-label"),
+  nfcStatus: $("#nfc-status"),
+  polishMessage: $("#polish-message"),
+  fragmentList: $("#fragment-list"),
+  scanButton: $("#scan-button"),
+  manualScanButton: $("#manual-scan-button"),
+  polishButton: $("#polish-button"),
+  toast: $("#toast")
+};
+
+function createArtifact() {
+  return {
+    id: "lighthouse-001",
+    type: "lighthouse",
+    firstScanAt: null,
+    lastScanAt: null,
+    scanCount: 0,
+    polishCount: 0,
+    hiddenPatina: 0,
+    hiddenBondValue: 0,
+    currentState: "陌生",
+    unlockedFragments: []
+  };
+}
+
+function loadArtifact() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (!saved) return createArtifact();
+
+  try {
+    return { ...createArtifact(), ...JSON.parse(saved) };
+  } catch {
+    return createArtifact();
+  }
+}
+
+function saveArtifact() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(artifact));
+}
+
+function startOfDay(time) {
+  const date = new Date(time);
+  date.setHours(0, 0, 0, 0);
+  return date.getTime();
+}
+
+function daysTogether() {
+  if (!artifact.firstScanAt) return 0;
+  return Math.max(1, Math.floor((startOfDay(Date.now()) - startOfDay(artifact.firstScanAt)) / DAY) + 1);
+}
+
+function formatDateTime(time) {
+  if (!time) return "无记录";
+
+  return new Intl.DateTimeFormat("zh-CN", {
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  }).format(new Date(time));
+}
+
+function choose(list) {
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+function stateForArtifact() {
+  const days = daysTogether();
+  if (!artifact.firstScanAt || days <= 1) return "陌生";
+  if (days === 2) return "记息";
+  return "认主";
+}
+
+function lineForState(state) {
+  if (state === "认主") return "灯火已认主。";
+  if (state === "记息") return "它似乎记住了你的气息。";
+  return "灯火尚未认识你。";
+}
+
+function patinaForArtifact() {
+  const value = artifact.hiddenPatina + artifact.hiddenBondValue + daysTogether() * 2;
+  if (value >= 52) return "守夜";
+  if (value >= 28) return "温润";
+  if (value >= 9) return "微明";
+  return "黯淡";
+}
+
+function updateFragments() {
+  const unlocked = new Set(artifact.unlockedFragments);
+
+  if (artifact.hiddenBondValue >= 8 || daysTogether() >= 2) unlocked.add(0);
+  if (artifact.hiddenBondValue >= 24 || artifact.polishCount >= 6 || daysTogether() >= 5) unlocked.add(1);
+  if (artifact.hiddenBondValue >= 48 || daysTogether() >= 9) unlocked.add(2);
+
+  artifact.unlockedFragments = [...unlocked].sort();
+}
+
+function renderFragments() {
+  elements.fragmentList.innerHTML = fragments.map((fragment, index) => {
+    const unlocked = artifact.unlockedFragments.includes(index);
+    const body = unlocked ? fragment : "尚未记起";
+    const className = unlocked ? "" : " class=\"locked\"";
+
+    return `<article${className}><span>碎片 ${index + 1}</span><p>${body}</p></article>`;
+  }).join("");
+}
+
+function render() {
+  artifact.currentState = stateForArtifact();
+  updateFragments();
+  saveArtifact();
+
+  const days = daysTogether();
+  const last = formatDateTime(artifact.lastScanAt);
+  const patina = patinaForArtifact();
+
+  elements.bondState.textContent = artifact.currentState;
+  elements.lastMeeting.textContent = artifact.lastScanAt ? `最近相遇于 ${last}` : "尚未相遇";
+  elements.artifactLine.textContent = lineForState(artifact.currentState);
+  elements.stateLabel.textContent = artifact.currentState;
+  elements.daysLabel.textContent = days ? `${days} 天` : "尚未开始";
+  elements.lastLabel.textContent = last;
+  elements.patinaLabel.textContent = patina;
+  renderFragments();
 }
 
 function showToast(message) {
-  toast.textContent = message;
-  toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 2300);
+  elements.toast.textContent = message;
+  elements.toast.classList.add("show");
+  window.clearTimeout(showToast.timer);
+  showToast.timer = window.setTimeout(() => elements.toast.classList.remove("show"), 2800);
 }
 
-function applyChoice(name, trait) {
-  const trace = document.querySelector("#choice-trace");
-  trace.classList.remove("pending");
-  trace.innerHTML = `<span>第三章 · 择意</span><strong>${name} · 器格「${trait}」</strong><small>这是你的个人显现，不是标准答案</small>`;
-  document.querySelector("#chapter-label").textContent = "第四章 / 六章";
-  document.querySelectorAll(".chapter-dots i")[2].className = "done";
-  document.querySelectorAll(".chapter-dots i")[3].className = "current";
-  document.querySelector(".invite-status").textContent = "候选档案 · 3 / 6 章完成";
-  document.querySelectorAll(".invite-rules span")[2].classList.add("done");
+function meetLighthouse(source = "manual") {
+  const now = Date.now();
+  const firstMeeting = !artifact.firstScanAt;
+
+  if (!artifact.firstScanAt) artifact.firstScanAt = now;
+  artifact.lastScanAt = now;
+  artifact.scanCount += 1;
+  artifact.hiddenBondValue += firstMeeting ? 4 : 2;
+  artifact.hiddenPatina += 1;
+
+  render();
+  const message = firstMeeting ? "灯火第一次记下了你的气息。" : choose(scanWhispers);
+  elements.nfcStatus.textContent = source === "nfc" ? "真实灯塔已被识别。" : "这次相遇已被记下。";
+  showToast(message);
 }
 
-navItems.forEach((item) => item.addEventListener("click", () => goTo(item.dataset.target)));
-document.querySelectorAll("[data-goto]").forEach((item) => item.addEventListener("click", () => goTo(item.dataset.goto)));
-document.querySelectorAll(".open-rite").forEach((item) => item.addEventListener("click", () => riteModal.classList.add("open")));
-document.querySelector(".modal-close").addEventListener("click", () => riteModal.classList.remove("open"));
+function polishLighthouse() {
+  artifact.polishCount += 1;
+  artifact.hiddenPatina += 2;
+  artifact.hiddenBondValue += 1;
 
-document.querySelectorAll(".choice-list button").forEach((button) => {
-  button.addEventListener("click", () => {
-    document.querySelectorAll(".choice-list button").forEach((item) => item.classList.remove("selected"));
-    button.classList.add("selected");
-    choice = { name: button.dataset.choice, trait: button.dataset.trait };
-    document.querySelector(".confirm-choice").disabled = false;
-  });
-});
-
-document.querySelector(".confirm-choice").addEventListener("click", () => {
-  if (!choice) return;
-  localStorage.setItem("panjiChoice", JSON.stringify(choice));
-  applyChoice(choice.name, choice.trait);
-  riteModal.classList.remove("open");
-  showToast(`第三章完成 · 初始器格「${choice.trait}」已显现`);
-});
-
-document.querySelectorAll(".intent-grid button").forEach((button) => {
-  button.addEventListener("click", () => {
-    document.querySelectorAll(".intent-grid button").forEach((item) => item.classList.remove("selected"));
-    button.classList.add("selected");
-    intent = { symbol: button.dataset.intent, name: button.dataset.name, copy: button.dataset.copy };
-    document.querySelector("#intent-title").textContent = `今日守护意图 · ${intent.symbol}`;
-    document.querySelector("#intent-copy").textContent = intent.copy;
-    document.querySelector(".begin-attune").disabled = false;
-    document.querySelector(".begin-attune").textContent = "开始今日随行";
-  });
-});
-
-document.querySelector(".begin-attune").addEventListener("click", () => {
-  if (!intent) return;
-  document.querySelector("#energy-fill").style.width = "33%";
-  document.querySelector("#energy-label").textContent = "今日能量 1 / 3";
-  document.querySelector("#main-crystal").classList.add("charged");
-  document.querySelector("#crystal-name").textContent = `${intent.name}正在形成`;
-  document.querySelector("#crystal-story").textContent = `${intent.copy} 完成三次随行后，这份意图会凝结为带有日期与故事的个人晶体。`;
-  crystalModal.classList.add("open");
-});
-
-document.querySelector(".close-crystal").addEventListener("click", () => {
-  crystalModal.classList.remove("open");
-  showToast("今日意图已保存 · 晶体进度 1 / 3");
-});
-
-document.querySelectorAll(".four-artifacts button:not(.active)").forEach((button) => {
-  button.addEventListener("click", () => showToast(`${button.querySelector("b").textContent}档案将在后续开炉前显现`));
-});
-
-const savedChoice = localStorage.getItem("panjiChoice");
-if (savedChoice) {
-  choice = JSON.parse(savedChoice);
-  applyChoice(choice.name, choice.trait);
+  const message = choose(polishWhispers);
+  elements.polishMessage.textContent = message;
+  render();
+  showToast(message);
 }
+
+function readRecord(record) {
+  if (!record || !record.data) return "";
+  if (record.recordType === "text") {
+    return new TextDecoder(record.encoding || "utf-8").decode(record.data);
+  }
+  if (record.recordType === "url") {
+    return new TextDecoder().decode(record.data);
+  }
+  return "";
+}
+
+function isLighthouseTag(event) {
+  const serial = (event.serialNumber || "").toLowerCase();
+  const records = [...event.message.records].map(readRecord).join(" ").toLowerCase();
+  return records.includes("lighthouse") || records.includes("panji") || records.includes("灯塔") || Boolean(serial);
+}
+
+async function scanNfc() {
+  if (!("NDEFReader" in window)) {
+    elements.nfcStatus.textContent = "此浏览器不能直接读取 NFC。Android Chrome 更适合真实测试。";
+    showToast("暂时无法读取 NFC。可以先记录一次相遇。");
+    return;
+  }
+
+  try {
+    const reader = new NDEFReader();
+    await reader.scan();
+    elements.nfcStatus.textContent = "正在等待灯塔靠近。";
+    showToast("把灯塔靠近手机背面。");
+
+    reader.onreadingerror = () => {
+      elements.nfcStatus.textContent = "这次没有读清。稍后再靠近一次。";
+    };
+
+    reader.onreading = (event) => {
+      if (!isLighthouseTag(event)) {
+        elements.nfcStatus.textContent = "有东西靠近了，但它不像灯塔。";
+        return;
+      }
+
+      meetLighthouse("nfc");
+    };
+  } catch (error) {
+    elements.nfcStatus.textContent = "灯塔没有回应。请确认 NFC 已开启，并从一次触碰开始。";
+    showToast("这次未能开始扫描。");
+  }
+}
+
+let artifact = loadArtifact();
+
+elements.scanButton.addEventListener("click", scanNfc);
+elements.manualScanButton.addEventListener("click", () => meetLighthouse("manual"));
+elements.polishButton.addEventListener("click", polishLighthouse);
+
+if (!("NDEFReader" in window)) {
+  elements.nfcStatus.textContent = "当前浏览器未提供 NFC。真实扫描请使用 Android Chrome。";
+}
+
+render();

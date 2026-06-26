@@ -3,166 +3,100 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#10110f">
-  <title>盘迹 · 持器试炼</title>
+  <meta name="theme-color" content="#12100c">
+  <title>盘迹 · 灯塔</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="app-shell">
     <header class="topbar">
-      <div><span class="eyebrow">PANJI / 盘迹</span><h1 id="page-title">候选者档案</h1></div>
-      <button class="avatar">候</button>
+      <span class="eyebrow">PANJI / THE LIGHTHOUSE</span>
+      <h1>灯塔</h1>
+      <p>北境炼器师留下的最后灯芯。</p>
     </header>
 
     <main>
-      <section class="page active" data-page="candidate">
-        <article class="hero-card">
-          <div class="hero-meta"><span class="status-dot"></span><span>候选持器者 · 试炼进行中</span><span class="serial">ECHO / 300</span></div>
-          <div class="artifact-stage">
-            <div class="sigil sigil-a"></div><div class="sigil sigil-b"></div>
-            <div class="artifact"><span class="artifact-core">响</span><i></i><i></i><i></i><i></i><i></i><i></i></div>
-            <span class="edition">本炉仅成 300 器</span>
-          </div>
-          <div class="artifact-copy">
-            <span class="maker">候选器物 01 / 重庆 · 铸七</span>
-            <h2>回响</h2>
-            <p>“它不会替人记住声音，只会提醒你曾经听见。”</p>
-          </div>
-          <div class="trial-progress">
-            <div><span>持器试炼</span><strong id="chapter-label">第三章 / 六章</strong></div>
-            <div class="chapter-dots">
-              <i class="done"></i><i class="done"></i><i class="current"></i><i></i><i></i><i></i>
-            </div>
-          </div>
-        </article>
-
-        <div class="section-head">
-          <div><span class="eyebrow">CURRENT RITE</span><h3>第三章 · 择意</h3></div>
-          <span class="time-chip">约 2 分钟</span>
-        </div>
-        <article class="rite-card">
-          <span class="rite-number">III</span>
-          <div>
-            <span class="meta">此选择将影响你的初始器格</span>
-            <h4>你希望“回响”为你保存什么？</h4>
-            <p>没有正确答案。认主以后，它会依照你的选择凝结不同晶体。</p>
-          </div>
-          <button class="round-button open-rite">→</button>
-        </article>
-
-        <div class="section-head">
-          <div><span class="eyebrow">YOUR TRACE</span><h3>你的试炼痕迹</h3></div>
-        </div>
-        <div class="trace-grid">
-          <article><span>第一章 · 闻器</span><strong>你听见了雨</strong><small>背景档案已解锁</small></article>
-          <article><span>第二章 · 识材</span><strong>钛 · 冷锻结构</strong><small>工艺档案已解锁</small></article>
-          <article class="pending" id="choice-trace"><span>第三章 · 择意</span><strong>等待你的选择</strong><small>将形成初始器格</small></article>
+      <section class="artifact-card" aria-labelledby="artifact-name">
+        <div class="artifact-meta">
+          <span id="bond-state">陌生</span>
+          <span id="last-meeting">尚未相遇</span>
         </div>
 
-        <div class="section-head">
-          <div><span class="eyebrow">FIRST FORGE</span><h3>首炉四器</h3></div>
-          <span class="meta">每款 300 件</span>
+        <div class="lighthouse-stage" aria-hidden="true">
+          <div class="snow-field"></div>
+          <div class="beacon-glow"></div>
+          <div class="lighthouse">
+            <i></i>
+            <b></b>
+            <span></span>
+          </div>
         </div>
-        <div class="four-artifacts">
-          <button class="active"><b>回响</b><small>声音 · 重复</small><em>重庆</em></button>
-          <button><b>年轮</b><small>变化 · 陪伴</small><em>福建</em></button>
-          <button><b>折光</b><small>视角 · 灵感</small><em>宁波</em></button>
-          <button><b>界碑</b><small>选择 · 边界</small><em>甘肃</em></button>
+
+        <div class="artifact-copy">
+          <span class="artifact-type">Artifact 01</span>
+          <h2 id="artifact-name">灯塔</h2>
+          <p id="artifact-line">灯火尚未认识你。</p>
         </div>
       </section>
 
-      <section class="page" data-page="trials">
-        <div class="section-intro"><span class="eyebrow">SIX RITES</span><h2>持器试炼</h2><p>六章共同故事建立器物的来处；你的选择决定它将成为怎样的陪伴。</p></div>
-        <div class="timeline">
-          <article class="completed"><span>01</span><div><small>闻器</small><h3>雨夜的第七声</h3><p>听见关于“回响”的第一则传闻。</p></div><b>已完成</b></article>
-          <article class="completed"><span>02</span><div><small>识材</small><h3>冷锻之痕</h3><p>认识材料、结构与炼器师铸七。</p></div><b>已完成</b></article>
-          <article class="active open-rite"><span>03</span><div><small>择意</small><h3>器物应当记住什么</h3><p>为未来的陪伴选择第一种意义。</p></div><b>进行中</b></article>
-          <article><span>04</span><div><small>蓄能</small><h3>七日随行</h3><p>在日常中完成三次守护意图。</p></div><b>未解锁</b></article>
-          <article><span>05</span><div><small>立契</small><h3>留下你的铭文</h3><p>写下一句只属于这件器物的话。</p></div><b>未解锁</b></article>
-          <article><span>06</span><div><small>持器</small><h3>开炉邀请</h3><p>获得 300 件“回响”的抽签资格。</p></div><b>未解锁</b></article>
+      <section class="quiet-panel">
+        <div class="section-title">
+          <span class="eyebrow">MEETING</span>
+          <h2>相遇</h2>
         </div>
-        <div class="story-rule"><span>共同背景</span><p>所有候选者会认识同一位炼器师、同一种工艺与同一段传闻。</p><span>个人显现</span><p>器格、铭文、晶体、光效和后续支线由你的选择生成，无法被攻略复制。</p></div>
+        <p class="body-copy">靠近真实的 NFC 灯塔。若此刻不能扫描，也可以先留下一次模拟相遇，用来测试十天的携带感。</p>
+        <div class="action-row">
+          <button class="primary-button" id="scan-button">靠近灯塔</button>
+          <button class="ghost-button" id="manual-scan-button">记录一次相遇</button>
+        </div>
+        <p class="support-copy" id="nfc-status">等待第一次相遇。</p>
       </section>
 
-      <section class="page" data-page="energy">
-        <div class="section-intro"><span class="eyebrow">DAILY ATTUNEMENT</span><h2>今日蓄能</h2><p>这是一种陪伴与自我提醒的仪式，不代表真实医疗、转运或防护功效。</p></div>
-        <article class="energy-vessel">
-          <span class="vessel-status">演示模式 · 认主后开放</span>
-          <div class="crystal-orbit"><div class="crystal" id="main-crystal"></div><i></i><i></i></div>
-          <h3 id="intent-title">今天，希望它提醒你什么？</h3>
-          <p id="intent-copy">选择一种守护意图。随行结束后，它会保存为只属于今天的能量痕迹。</p>
-          <div class="energy-meter"><span id="energy-fill"></span></div>
-          <small id="energy-label">今日能量 0 / 3</small>
+      <section class="stats-grid" aria-label="灯塔状态">
+        <article>
+          <span>当前状态</span>
+          <strong id="state-label">陌生</strong>
         </article>
-        <div class="intent-grid">
-          <button data-intent="静" data-name="静晶" data-copy="在嘈杂中，为自己留下一点安定。"><b>静</b><span>安定 · 专注</span></button>
-          <button data-intent="行" data-name="行晶" data-copy="开始行动，不必等待完全准备好。"><b>行</b><span>行动 · 勇气</span></button>
-          <button data-intent="守" data-name="守晶" data-copy="记得照顾自己，也记得有人与你同行。"><b>守</b><span>陪伴 · 安全感</span></button>
-          <button data-intent="明" data-name="明晶" data-copy="换一个角度，看见今天被忽略的细节。"><b>明</b><span>观察 · 灵感</span></button>
-        </div>
-        <button class="primary-button begin-attune" disabled>选择今日守护意图</button>
-        <div class="section-head"><div><span class="eyebrow">CRYSTAL CASE</span><h3>晶匣</h3></div><span class="meta">2 枚已凝结</span></div>
-        <div class="crystal-case">
-          <article><div class="mini-crystal quiet"></div><span>静晶 · 06.08</span><p>形成于考试前的清晨</p></article>
-          <article><div class="mini-crystal bright"></div><span>明晶 · 06.10</span><p>保存了一束放学后的光</p></article>
-          <article class="empty"><div>＋</div><span>下一枚晶体</span><p>等待一次完整随行</p></article>
-        </div>
+        <article>
+          <span>已陪伴</span>
+          <strong id="days-label">尚未开始</strong>
+        </article>
+        <article>
+          <span>最近一次相遇</span>
+          <strong id="last-label">无记录</strong>
+        </article>
+        <article>
+          <span>器韵</span>
+          <strong id="patina-label">黯淡</strong>
+        </article>
       </section>
 
-      <section class="page" data-page="invitation">
-        <div class="section-intro"><span class="eyebrow">FORGE INVITATION</span><h2>开炉邀请</h2><p>完成六章不是得到商品，而是获得参加这一炉寻主的资格。</p></div>
-        <article class="invitation-card">
-          <div class="wax-seal">响</div>
-          <span class="invite-status">候选档案 · 2 / 6 章完成</span>
-          <span class="eyebrow">FIRST FORGE / ECHO</span>
-          <h2>回响<br>首炉寻主函</h2>
-          <p>重庆，铸七制。钛合金冷锻结构。本炉限成三百器，永不复刻原编号。</p>
-          <div class="edition-count"><strong>300</strong><span>全球编号<br>一人一器</span></div>
-          <div class="invite-rules">
-            <span class="done">完成「闻器」</span><span class="done">完成「识材」</span>
-            <span>完成「择意」</span><span>完成「七日随行」</span>
-            <span>写下个人铭文</span><span>通过最终持器仪式</span>
-          </div>
-          <div class="invite-footer"><div><small>完成后获得</small><strong>购买抽签资格 · 资格不可转让</strong></div><button class="seal-button" data-goto="trials">继续试炼</button></div>
-        </article>
-        <article class="fairness-note"><h3>没有中签，故事也不会归零</h3><p>候选档案、试炼选择与数字晶体全部保留，并获得下一炉优先线索。持器资格不等同于升值承诺。</p></article>
+      <section class="quiet-panel">
+        <div class="section-title">
+          <span class="eyebrow">POLISH</span>
+          <h2>盘</h2>
+        </div>
+        <p class="body-copy">没有需要完成的任务。只是让手心的温度，慢慢留在灯芯上。</p>
+        <button class="primary-button full" id="polish-button">我盘了它一会儿</button>
+        <p class="whisper" id="polish-message">这段时间会留下痕迹。</p>
+      </section>
+
+      <section class="quiet-panel">
+        <div class="section-title">
+          <span class="eyebrow">MEMORY</span>
+          <h2>记忆碎片</h2>
+        </div>
+        <div class="fragment-list" id="fragment-list"></div>
+      </section>
+
+      <section class="lore-card">
+        <span class="eyebrow">LORE</span>
+        <p>灯塔并不会照亮道路。它存在的意义，是告诉主人：即使道路消失，灯火依然可以继续前行。</p>
       </section>
     </main>
-
-    <nav class="bottom-nav">
-      <button class="nav-item active" data-target="candidate"><span>候</span><small>候选</small></button>
-      <button class="nav-item" data-target="trials"><span>试</span><small>试炼</small></button>
-      <button class="nav-item" data-target="energy"><span>晶</span><small>蓄能</small></button>
-      <button class="nav-item" data-target="invitation"><span>函</span><small>邀请</small></button>
-    </nav>
   </div>
 
-  <div class="toast" id="toast"></div>
-  <div class="modal-backdrop" id="rite-modal" aria-hidden="true">
-    <div class="modal">
-      <button class="modal-close">×</button>
-      <span class="eyebrow">RITE III / INTENTION</span>
-      <div class="modal-seal">意</div>
-      <h2>你希望“回响”保存什么？</h2>
-      <p>这个选择没有高低，也不会锁死未来。它只会成为你和器物之间的第一层倾向。</p>
-      <div class="choice-list">
-        <button data-choice="归途" data-trait="守望"><b>归途</b><span>保存每天平凡但确定的回来</span></button>
-        <button data-choice="勇气" data-trait="前行"><b>勇气</b><span>保存那些仍然选择开始的时刻</span></button>
-        <button data-choice="声音" data-trait="聆听"><b>声音</b><span>保存不想被时间覆盖的人与事</span></button>
-      </div>
-      <button class="primary-button confirm-choice" disabled>刻下这次选择</button>
-    </div>
-  </div>
-
-  <div class="modal-backdrop" id="crystal-modal" aria-hidden="true">
-    <div class="modal crystal-result">
-      <span class="eyebrow">ATTUNEMENT COMPLETE</span>
-      <div class="crystal large"></div>
-      <h2 id="crystal-name">静晶正在形成</h2>
-      <p id="crystal-story">今天的守护意图已被保存。完成三次随行后，它会成为一枚带有日期与故事的个人晶体。</p>
-      <button class="primary-button close-crystal">收入今日随行</button>
-    </div>
-  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="app.js"></script>
 </body>
 </html>
