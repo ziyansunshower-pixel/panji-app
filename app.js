@@ -1,4 +1,5 @@
 const STORAGE_KEY = "panji:lighthouse:v1";
+const NFC_LINK_KEY = "panji:lighthouse:last-link-scan";
 const DAY = 24 * 60 * 60 * 1000;
 
 const fragments = [
@@ -176,8 +177,30 @@ function meetLighthouse(source = "manual") {
 
   render();
   const message = firstMeeting ? "灯火第一次记下了你的气息。" : choose(scanWhispers);
-  elements.nfcStatus.textContent = source === "nfc" ? "真实灯塔已被识别。" : "这次相遇已被记下。";
+  if (source === "link") {
+    elements.nfcStatus.textContent = "灯塔从 NFC 链接中醒来。";
+  } else {
+    elements.nfcStatus.textContent = source === "nfc" ? "真实灯塔已被识别。" : "这次相遇已被记下。";
+  }
   showToast(message);
+}
+
+function handleNfcLinkScan() {
+  const params = new URLSearchParams(window.location.search);
+  const scan = params.get("scan");
+  if (scan !== "lighthouse" && scan !== "灯塔") return;
+
+  const scanId = params.get("tag") || params.get("id") || "lighthouse";
+  const today = new Date().toISOString().slice(0, 10);
+  const linkKey = `${scanId}:${today}`;
+
+  if (sessionStorage.getItem(NFC_LINK_KEY) === linkKey) {
+    elements.nfcStatus.textContent = "灯塔刚刚已经醒来过。";
+    return;
+  }
+
+  sessionStorage.setItem(NFC_LINK_KEY, linkKey);
+  meetLighthouse("link");
 }
 
 function polishLighthouse() {
@@ -250,3 +273,4 @@ if (!("NDEFReader" in window)) {
 }
 
 render();
+handleNfcLinkScan();
